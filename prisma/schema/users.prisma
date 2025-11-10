@@ -5,13 +5,12 @@ model User {
   password         String
   image_url        String @default("https://www.creativefabrica.com/wp-content/uploads/2022/10/25/Person-icon-Graphics-43204353-1.jpg")
   role             Role @default(USER)
-  isVerified       VerificationStatus @default(FALSE)
   status           UserStatus         @default(ACTIVE)
   created_at       DateTime           @default(now())
   updated_at       DateTime           @updatedAt
   orders           Order[]
   products         Product[]
-  @@index([status, isVerified])
+  @@index([status,role])
 }
 
 enum UserStatus {
@@ -19,12 +18,6 @@ enum UserStatus {
   DISACTIVE
   BLOCKED
 }
-
-enum VerificationStatus {
-  VERIFIED
-  FALSE
-}
-
 enum Role {
   USER
   ADMIN
