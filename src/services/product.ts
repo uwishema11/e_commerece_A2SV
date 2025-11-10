@@ -30,20 +30,12 @@ export const updateProduct = async (
   id: string,
   updatedProduct: Partial<productType>
 ) => {
-  const { userId, ...rest } = updatedProduct;
-
-  const data: Prisma.ProductUncheckedUpdateInput = {
-    ...rest,
-    updated_at: new Date(),
-  };
-
-  if (userId) {
-    (data as any).user_id = userId;
-  }
-
   return await prisma.product.update({
+    data: {
+      ...updatedProduct,
+      updated_at: new Date(),
+    },
     where: { product_id: id },
-    data,
   });
 };
 

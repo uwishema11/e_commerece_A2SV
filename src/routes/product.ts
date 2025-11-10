@@ -17,5 +17,12 @@ productRouter.post(
   verifyAdmin,
   productController.createProduct
 );
+productRouter.patch(
+  '/edit/:id',
+  uploadImg,
+  protectedRoute,
+  verifyAdmin,
+  productController.updateProductById
+);
 
 export default productRouter;
