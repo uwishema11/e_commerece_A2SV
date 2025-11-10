@@ -2,27 +2,11 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import redis from '../config/redis';
 
-import {
-  addUser,
-  findUserByEmail,
-} from '../services/user';
+import { addUser, findUserByEmail } from '../services/user';
 import { userType } from '../types/user';
-import {
-  verifyAccessToken,
-  generateAccessToken,
-} from '../helpers/generateToken';
+import { generateAccessToken } from '../helpers/generateToken';
 import { successResponse, errorResponse } from '../helpers/response';
 import asyncHandler from '../helpers/aynchHandler';
-
-import { UserStatus } from '@prisma/client';
-
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    role: string;
-  };
-}
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { password, email } = req.body;
@@ -58,4 +42,51 @@ export const registerUser = asyncHandler(async (req, res) => {
     201,
     'User registered successfully. Please check your email to verify your account.'
   );
+});
+
+export const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return errorResponse(res, 'Please provide both email and password', 400);
+  }
+
+  const user = await findUserByEmail(email);
+  if (!user) {
+    return errorResponse(
+      res,
+      'User not found! Please register to proceed',
+      404
+    );
+  }
+
+  const matchedPassword = await bcrypt.compare(password, user.password);
+  if (!matchedPassword) {
+    return errorResponse(
+      res,
+      'Invalid email or password. Please try again with the correct credentials.',
+      401
+    );
+  }
+  const token = await generateAccessToken(user);
+  const userData = {
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    image_url: user.image_url,
+  };
+  successResponse(
+    res,
+    { token, user: userData },
+    200,
+    'Logged in successfully'
+  );
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  res.cookie('jwt', 'Loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  successResponse(res, null, 200, 'Logged out successfully');
 });
