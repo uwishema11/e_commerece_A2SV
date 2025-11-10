@@ -10,7 +10,7 @@ model Product {
   user_id        String
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
-  category      Category @relation(fields:[category_name], references: [categoty_name])
+  category      Category @relation(fields:[category_name], references: [category_name])
   orderItems     OrderItem[]
   user           User          @relation(fields: [user_id], references: [id])
 

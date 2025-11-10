@@ -1,0 +1,57 @@
+import { Prisma, productStatus } from '@prisma/client';
+import { prisma } from '../database/prismaClient';
+import { productType } from '../types/product';
+
+export const addProduct = async (newProduct: productType) => {
+  const registeredProduct = await prisma.product.create({
+    data: {
+      name: newProduct.name,
+      description: newProduct.description,
+      price: newProduct.price,
+      stock_quantity: newProduct.stock_quantity,
+      image_url: newProduct.image_url,
+      user: { connect: { id: newProduct.userId } },
+      category: {
+        connectOrCreate: {
+          where: { category_name: newProduct.category_name },
+          create: { category_name: newProduct.category_name },
+        },
+      },
+    },
+    include: {
+      category: true,
+      user: true,
+    },
+  });
+  return registeredProduct;
+};
+
+export const updateProduct = async (
+  id: string,
+  updatedProduct: Partial<productType>
+) => {
+  const { userId, ...rest } = updatedProduct;
+
+  const data: Prisma.ProductUncheckedUpdateInput = {
+    ...rest,
+    updated_at: new Date(),
+  };
+
+  if (userId) {
+    (data as any).user_id = userId;
+  }
+
+  return await prisma.product.update({
+    where: { product_id: id },
+    data,
+  });
+};
+
+export const findProductById = async (id: string) => {
+  const product = await prisma.product.findUnique({
+    where: {
+      product_id: id,
+    },
+  });
+  return product;
+};

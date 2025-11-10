@@ -1,6 +1,4 @@
 import bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
-import redis from '../config/redis';
 
 import { addUser, findUserByEmail } from '../services/user';
 import { userType } from '../types/user';
