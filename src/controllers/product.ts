@@ -1,10 +1,12 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { productStatus } from '@prisma/client';
 import { successResponse, errorResponse } from '../helpers/response';
 import {
   addProduct,
   findProductById,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  findAllProducts,
 } from '../services/product';
 import asyncHandler from '../helpers/aynchHandler';
 interface AuthenticatedRequest extends Request {
@@ -66,5 +68,33 @@ export const deleteProductById = asyncHandler(async (req, res) => {
     return errorResponse(res, 'Product not found', 404);
   }
   const response = await deleteProduct(id);
-  successResponse(res, response, 200, 'Product with below details have been deleted successfully');
+  successResponse(
+    res,
+    response,
+    200,
+    'Product with below details have been deleted successfully'
+  );
+});
+
+export const getProductById = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const product = await findProductById(id);
+    if (!product) {
+      return errorResponse(res, 'Product not found', 404);
+    }
+    successResponse(res, product, 200, 'Product retrieved successfully');
+  }
+);
+
+export const getProducts = asyncHandler(async (req, res) => {
+  const body = {
+    page: parseInt(req.query.page as string) || 1,
+    per_page: parseInt(req.query.limit as string) || 10,
+    filter: req.query.filter as productStatus,
+    search: (req.query.search as string) || '',
+  };
+  const products = await findAllProducts(body);
+
+  successResponse(res, products, 200, 'Products retrieved successfully');
 });

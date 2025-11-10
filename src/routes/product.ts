@@ -30,5 +30,6 @@ productRouter.delete(
   verifyAdmin,
   productController.deleteProductById
 );
-
+productRouter.get('/', productController.getProducts);
+productRouter.get('product-details/:id', productController.getProductById);
 export default productRouter;

@@ -2,6 +2,13 @@ import { Prisma, productStatus } from '@prisma/client';
 import { prisma } from '../database/prismaClient';
 import { productType } from '../types/product';
 
+interface filterParamsType {
+  filter: productStatus;
+  page: number;
+  search: string;
+  per_page: number;
+}
+
 export const addProduct = async (newProduct: productType) => {
   const registeredProduct = await prisma.product.create({
     data: {
@@ -53,4 +60,53 @@ export const deleteProduct = async (id: string) => {
   return await prisma.product.delete({
     where: { product_id: id },
   });
+};
+
+export const findAllProducts = async (queryParams: filterParamsType) => {
+  const { page, per_page, search, filter } = queryParams;
+  const whereClouse = {
+    ...(filter ? { status: filter } : {}),
+    ...(search
+      ? {
+          OR: [
+            {
+              name: {
+                contains: search.toString(),
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+            {
+              description: {
+                contains: search.toString(),
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+          ],
+        }
+      : {}),
+  };
+  const products = await prisma.product.findMany({
+    where: whereClouse,
+    skip: (page - 1) * per_page,
+    take: Number(per_page),
+    orderBy: {
+      updated_at: 'desc',
+    },
+  });
+
+  const total = await prisma.product.count({
+    where: whereClouse,
+  });
+
+  const totalPages = Math.ceil(total / per_page);
+
+  return {
+    data: products,
+    pagination: {
+      total,
+      page: Number(page),
+      per_page: Number(per_page),
+      totalPages,
+    },
+  };
 };
