@@ -1,0 +1,24 @@
+model Product {
+  product_id     String           @id @default(uuid())
+  name           String 
+  image_url      String @default("https://m.media-amazon.com/images/I/51sMoLBj5gL.jpg")
+  description    String
+  price          Float
+  stock_quantity Int
+  status         productStatus @default(AVAILABLE)
+  category_name String
+  user_id        String
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  category      Category @relation(fields:[category_name], references: [categoty_name])
+  orderItems     OrderItem[]
+  user           User          @relation(fields: [user_id], references: [id])
+
+@@unique([user_id, name])
+@@index([name, status])
+}
+
+enum productStatus {
+  AVAILABLE
+  OUT_OF_STOCK
+}
