@@ -47,3 +47,10 @@ export const findProductById = async (id: string) => {
   });
   return product;
 };
+
+export const deleteProduct = async (id: string) => {
+  console.log('Deleting product with ID:', id);
+  return await prisma.product.delete({
+    where: { product_id: id },
+  });
+};

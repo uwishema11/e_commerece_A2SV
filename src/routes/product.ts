@@ -24,5 +24,11 @@ productRouter.patch(
   verifyAdmin,
   productController.updateProductById
 );
+productRouter.delete(
+  '/delete/:id',
+  protectedRoute,
+  verifyAdmin,
+  productController.deleteProductById
+);
 
 export default productRouter;

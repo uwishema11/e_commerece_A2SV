@@ -4,6 +4,7 @@ import {
   addProduct,
   findProductById,
   updateProduct,
+  deleteProduct
 } from '../services/product';
 import asyncHandler from '../helpers/aynchHandler';
 interface AuthenticatedRequest extends Request {
@@ -44,8 +45,7 @@ export const updateProductById = asyncHandler(
     if (!req.user) {
       return errorResponse(res, 'Unauthorized to perform this action', 401);
     }
-    console.log(req.body)
-    const result = {
+    const product = {
       ...req.body,
       image_url,
       user_id: req.user.id,
@@ -54,8 +54,17 @@ export const updateProductById = asyncHandler(
     if (!isProductExist) {
       return errorResponse(res, 'Product not found', 404);
     }
-    const response = await updateProduct(id, result);
-    console.log(response.name);
-    successResponse(res, response, 200, 'Product updated successfully');
+    const updatedProduct = await updateProduct(id, product);
+    successResponse(res, updatedProduct, 201, 'Product updated successfully');
   }
 );
+
+export const deleteProductById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const isProductExist = await findProductById(id);
+  if (!isProductExist) {
+    return errorResponse(res, 'Product not found', 404);
+  }
+  const response = await deleteProduct(id);
+  successResponse(res, response, 200, 'Product with below details have been deleted successfully');
+});
