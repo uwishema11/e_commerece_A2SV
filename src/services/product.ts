@@ -1,6 +1,7 @@
 import { Prisma, productStatus } from '@prisma/client';
 import { prisma } from '../database/prismaClient';
 import { productType } from '../types/product';
+import redis from '../config/redis';
 
 interface filterParamsType {
   filter: productStatus;
@@ -8,6 +9,16 @@ interface filterParamsType {
   search: string;
   per_page: number;
 }
+const testRedisConnection = async () => {
+  try {
+    await redis.ping();
+    console.log('Redis is connected and responding.');
+  } catch (error) {
+    console.error('Redis connection error:', error);
+  }
+};
+
+testRedisConnection();
 
 export const addProduct = async (newProduct: productType) => {
   const registeredProduct = await prisma.product.create({
@@ -37,13 +48,14 @@ export const updateProduct = async (
   id: string,
   updatedProduct: Partial<productType>
 ) => {
-  return await prisma.product.update({
+  await prisma.product.update({
     data: {
       ...updatedProduct,
       updated_at: new Date(),
     },
     where: { product_id: id },
   });
+  await redis.del('cacheKey');
 };
 
 export const findProductById = async (id: string) => {
@@ -57,9 +69,10 @@ export const findProductById = async (id: string) => {
 
 export const deleteProduct = async (id: string) => {
   console.log('Deleting product with ID:', id);
-  return await prisma.product.delete({
+  await prisma.product.delete({
     where: { product_id: id },
   });
+  await redis.del('cacheKey');
 };
 
 export const findAllProducts = async (queryParams: filterParamsType) => {
@@ -85,6 +98,14 @@ export const findAllProducts = async (queryParams: filterParamsType) => {
         }
       : {}),
   };
+
+  const cacheKey = `products:page=${page}:per_page=${per_page}:search=${search || 'none'}:filter=${filter || 'none'}`;
+
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    console.log('📦 Serving from Redis cache');
+    return JSON.parse(cached);
+  }
   const products = await prisma.product.findMany({
     where: whereClouse,
     skip: (page - 1) * per_page,
@@ -99,6 +120,7 @@ export const findAllProducts = async (queryParams: filterParamsType) => {
   });
 
   const totalPages = Math.ceil(total / per_page);
+  await redis.set(cacheKey, JSON.stringify(products), 'EX', 60 * 35);
 
   return {
     data: products,

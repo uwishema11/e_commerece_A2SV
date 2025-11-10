@@ -5,6 +5,7 @@ import cors from 'cors';
 import { errors } from 'celebrate';
 import userRouter from './routes/user';
 import productRouter from './routes/product';
+import orderRouter from './routes/order';
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
+app.use('/api/orders', orderRouter);
 app.use(errors());
 
 export default app;
