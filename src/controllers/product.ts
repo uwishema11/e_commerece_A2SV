@@ -72,7 +72,7 @@ export const deleteProductById = asyncHandler(async (req, res) => {
     res,
     response,
     200,
-    'Product with below details have been deleted successfully'
+    'Product have been deleted successfully'
   );
 });
 

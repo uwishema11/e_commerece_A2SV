@@ -1,0 +1,131 @@
+definitions:
+  product:
+    type: object
+    required:
+      - name
+      - description
+      - stock_quantity
+      - price
+      - category_name
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      stock_quantity:
+        type: integer
+      price:
+        type: number
+      category_name:
+        type: string
+      image_url:
+        type: string
+
+paths:
+  /api/products/:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          description: List of all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/product'
+        '500':
+          description: Internal server error
+
+  /api/products/create:
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/definitions/product'
+      responses:
+        '201':
+          description: Product created successfully
+        '400':
+          description: Invalid request data
+        '500':
+          description: Internal server error
+
+  /api/products/edit/{id}:
+    patch:
+      tags:
+        - Products
+      summary: Update a product by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/definitions/product'
+      responses:
+        '200':
+          description: Product updated successfully
+        '400':
+          description: Invalid request data
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+  /api/products/delete/{id}:
+    delete:
+      tags:
+        - Products
+      summary: Delete a product by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Product ID
+      responses:
+        '200':
+          description: Product deleted successfully
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+  /api/products/product-details/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get a product by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Product ID
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error

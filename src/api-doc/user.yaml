@@ -17,7 +17,7 @@ definitions:
         type: string
         description: Password for login
 paths:
-  /api/user/register:
+  /api/users/register:
     post:
       tags:
         - Users
@@ -38,7 +38,7 @@ paths:
         '400':
           description: Invalid data in the request
 
-/api/user/login:
+/api/users/login:
   post:
     tags:
       - Users

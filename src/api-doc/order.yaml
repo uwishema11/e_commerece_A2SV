@@ -1,0 +1,71 @@
+definitions:
+  orderItem:
+    type: object
+    required:
+      - product_id
+      - quantity
+    properties:
+      product_id:
+        type: string
+        format: uuid
+        description: ID of the product
+      quantity:
+        type: integer
+        description: Quantity of the product
+
+  createOrder:
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        description: List of products to order
+        items:
+          $ref: '#/definitions/orderItem'
+
+paths:
+  /api/orders/create:
+    post:
+      tags:
+        - Orders
+      summary: Place a new order with multiple products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/createOrder'
+      responses:
+        '201':
+          description: Order placed successfully
+        '400':
+          description: Invalid request data
+        '500':
+          description: Internal server error
+  /api/orders/:
+    get:
+      tags:
+        - Orders
+      summary: Get all orders
+      responses:
+        '200':
+          description: List of all orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    order_id:
+                      type: string
+                      format: uuid
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/definitions/orderItem'
+                    total_price:
+                      type: number
+        '500':
+          description: Internal server error
