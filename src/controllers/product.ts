@@ -68,12 +68,7 @@ export const deleteProductById = asyncHandler(async (req, res) => {
     return errorResponse(res, 'Product not found', 404);
   }
   const response = await deleteProduct(id);
-  successResponse(
-    res,
-    response,
-    200,
-    'Product have been deleted successfully'
-  );
+  successResponse(res, response, 200, 'Product have been deleted successfully');
 });
 
 export const getProductById = asyncHandler(
