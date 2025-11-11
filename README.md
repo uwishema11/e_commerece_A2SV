@@ -109,6 +109,6 @@ Interactive documentation available via Swagger UI at:
 ## 📞 Contact
 
 [Celine Uwishema] - [uwishemaceline4@gmail.com]  
-Project Link: [https://github.com/uwishema11/Trucking-Logistics-Management-System]
+Project Link: [https://github.com/uwishema11/e_commerece_A2SV]
 
 🌐 GitHub Profile: [https://github.com/uwishema11]
