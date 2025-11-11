@@ -1,5 +1,4 @@
 import { prisma } from '../database/prismaClient';
-import { Prisma } from '@prisma/client';
 
 import { userType } from '../types/user';
 

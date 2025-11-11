@@ -101,11 +101,6 @@ Make sure you have the following:
   - Validate stock availability
   - Full transaction safety (rollback if failure occurs)
 
-## 🧪 API Documentation
-
-Interactive documentation available via Swagger UI at:
-👉 [http://localhost:4000/api-docs]
-
 ## 📞 Contact
 
 [Celine Uwishema] - [uwishemaceline4@gmail.com]  

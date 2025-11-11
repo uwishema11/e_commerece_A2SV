@@ -8,7 +8,6 @@ const secret = process.env.JWT_SECRET as string;
 if (!secret) {
   throw new Error('JWT_SECRET is not defined in the environment variables');
 }
-const expires = Number(process.env.JWT_COOKIE_EXPIRES_IN);
 
 export const generateAccessToken = async (user: tokenData) => {
   const payload = {
