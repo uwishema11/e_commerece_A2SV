@@ -77,14 +77,14 @@ Make sure you have the following:
 
 ## Why These Technologies
 
-| Technology            | Reason                        
-|:------------------- |:---------------------------------------------------|
-| Node.js & Express   | Fast, lightweight, and widely used for RESTful APIs| 
-| Typescript          | Adds strong typing, improving code reliability     |
-| Prisma              | Developer-friendly ORM with type safety            |
-| Postgres            | Reliable and scalable relational database          | 
-|Redis                |Enhances performance with caching                   |
-|Cloudinary           | Simplifies file upload and image  management       |
+| Technology        | Reason                                              |
+| :---------------- | :-------------------------------------------------- |
+| Node.js & Express | Fast, lightweight, and widely used for RESTful APIs |
+| Typescript        | Adds strong typing, improving code reliability      |
+| Prisma            | Developer-friendly ORM with type safety             |
+| Postgres          | Reliable and scalable relational database           |
+| Redis             | Enhances performance with caching                   |
+| Cloudinary        | Simplifies file upload and image management         |
 
 ## ✨ Key Features
 
