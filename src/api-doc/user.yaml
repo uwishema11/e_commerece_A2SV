@@ -1,0 +1,69 @@
+definitions:
+  users:
+    type: object
+    required:
+      - username
+      - email
+      - confirm_password
+      - password
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      confirm_password:
+        type: string
+      password:
+        type: string
+        description: Password for login
+paths:
+  /api/user/register:
+    post:
+      tags:
+        - Users
+      summary: Creates A New User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/users'
+      responses:
+        '200':
+          description: User is successful registered
+        '500':
+          description: Internal server error
+        '409':
+          description: Already exists
+        '400':
+          description: Invalid data in the request
+
+/api/user/login:
+  post:
+    tags:
+      - Users
+    summary: Login to platform via email & password
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                description: user's email
+              password:
+                type: string
+                description: user's password
+    responses:
+      '201':
+        description: User logged in successfully
+      '400':
+        description: Bad request
+      '401':
+        description: Wrong email or password
+      '500':
+        description: Opps! something went wrong

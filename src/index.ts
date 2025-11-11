@@ -1,8 +1,10 @@
 import app from './app';
 import { prisma } from './database/prismaClient';
 import './config/redis';
+import { swaggerDocs } from './api-doc/swagger';
 const PORT = 4000;
 
+swaggerDocs(app);
 async function checkDatabaseConnection() {
   try {
     await prisma.$connect();

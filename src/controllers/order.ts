@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { createOrder, getUserOrders } from '../services/order';
 import { errorResponse, successResponse } from '../helpers/response';
 import asyncHandler from '../helpers/aynchHandler';

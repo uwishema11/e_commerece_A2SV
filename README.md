@@ -97,9 +97,15 @@ Make sure you have the following:
   - Upload product images via Cloudinary
   - Redis caching for fast retrieval
 - **📦 Order Management**
+
   - Place orders directly
   - Validate stock availability
   - Full transaction safety (rollback if failure occurs)
+
+## 🧪 API Documentation
+
+Interactive documentation available via Swagger UI at:
+👉 [http://localhost:4000/api-docs]
 
 ## 📞 Contact
 
