@@ -1,5 +1,9 @@
 import { Request } from 'express';
-import { createOrder, getUserOrders } from '../services/order';
+import {
+  createOrder,
+  getUserOrders,
+  getOrderById,
+} from '../services/order';
 import { errorResponse, successResponse } from '../helpers/response';
 import asyncHandler from '../helpers/aynchHandler';
 
@@ -32,3 +36,14 @@ export const getOrdersController = asyncHandler(
     successResponse(res, orders, 200, 'Orders retrieved successfully');
   }
 );
+
+export const getOrderByIdController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const existingOrder = await getOrderById(id);
+  if (!existingOrder) {
+    return errorResponse(res, 'Order is not found', 404);
+  }
+  const order = await getOrderById(id);
+  successResponse(res, order, 200, 'Order retrieved successfully');
+});
+

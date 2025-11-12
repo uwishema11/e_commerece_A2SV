@@ -65,3 +65,8 @@ export const createOrder = async (userId: string, items: any[]) => {
     return order;
   });
 };
+
+export async function getOrderById(order_id: string) {
+  return prisma.order.findUnique({ where: { order_id } });
+}
+
